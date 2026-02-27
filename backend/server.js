@@ -11,8 +11,9 @@ const corsOptions = {
 
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
-const product = {
+let product = {
     id: 1,
     name: "Laptop Gamer",
     price: 1500,
@@ -30,7 +31,7 @@ app.get('/data', (req, res) => {
     if (req.headers['if-none-match'] === etag) {
         res.status(304).end();
     } else {
-        
+    
         res.setHeader('ETag', etag);
         res.json(data);
     }
@@ -47,6 +48,18 @@ app.get('/product', (req, res) => {
     console.log("Enviando producto (Primera vez o modificado)");
     res.setHeader('Last-Modified', product.lastUpdated);
     res.json(product);
+});
+
+app.put('/product', (req, res) => {
+    const { name, price } = req.body;
+
+    if (name) product.name = name;
+    if (price) product.price = price;
+
+    product.lastUpdated = new Date().toUTCString();
+
+    console.log("Producto modificado en el servidor:", product);
+    res.json({ message: "Producto actualizado correctamente", product });
 });
 
     app.listen(port, () => {

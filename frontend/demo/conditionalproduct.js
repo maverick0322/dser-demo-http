@@ -38,3 +38,27 @@ document.getElementById('fetchProduct').addEventListener('click', () => {
     })
     .catch(error => console.error('Error:', error));
 });
+
+document.getElementById('updateProduct').addEventListener('click', () => {
+    const nameInput = document.getElementById('newName').value;
+    const priceInput = document.getElementById('newPrice').value;
+
+    const dataToSend = {
+        name: nameInput || "Laptop Gamer Mejorada",
+        price: Number(priceInput) || 2000
+    };
+
+    fetch(`http://${urlBase}/product`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log("Respuesta del PUT:", data);
+        alert(`¡Actualizado en el servidor!\n\nAhora presiona "Obtener datos de producto" arriba para ver cómo el caché se rompe (Status 200).`);
+    })
+    .catch(error => console.error('Error al actualizar:', error));
+});
